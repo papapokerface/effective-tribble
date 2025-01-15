@@ -10,6 +10,12 @@ var results = [
     context.scale(-1, 1);
     context.translate(-around, 0);
   }
+
+  function generateTile(min, max) {
+    const now = Date.now();
+    const range = max - min +1;
+    return min + Math.floor(now / 60) % range;
+  }
   
   var CanvasDisplay = class CanvasDisplay {
     constructor(parent, level) {
@@ -97,7 +103,7 @@ var results = [
   };
   
   var playerSprites = document.createElement("img");
-  playerSprites.src = "img/g2_player.png";
+  playerSprites.src = "img/g2_player_rpg.png";
   var playerXOverlap = 4;
   
   CanvasDisplay.prototype.drawPlayer = function(player, x, y,
@@ -108,11 +114,13 @@ var results = [
       this.flipPlayer = player.speed.x < 0;
     }
   
-    let tile = 8;
-    if (player.speed.y != 0) {
-      tile = 9;
-    } else if (player.speed.x != 0) {
-      tile = Math.floor(Date.now() / 60) % 8;
+    let tile = 3;
+    if (player.speed.x != 0) {
+      tile = generateTile(0, 2);
+    }  else if (player.speed.y > 0) {
+      tile = generateTile(4, 6);
+    }  else if (player.speed.y < 0) {
+      tile = generateTile(7, 9);
     }
   
     this.cx.save();
